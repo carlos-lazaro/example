@@ -9,7 +9,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 3000:3000
+      - $PORT:$PORT
     networks:
       - app-network
     volumes:
@@ -31,7 +31,7 @@ services:
       - MYSQL_USER=$MYSQL_USER
       - MYSQL_ROOT_PASSWORD=$MYSQL_PASSWORD
     ports:
-      - "3307:3306"
+      - "$MYSQL_PORT:3306"
     volumes:
       - db:/var/lib/mysql
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
