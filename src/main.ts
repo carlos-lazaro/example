@@ -2,7 +2,7 @@ import bodyParser from "body-parser";
 import express from "express";
 
 import { env } from "./config";
-import { SequelizeDatabase } from "./dependencies/database";
+import { SequelizeDatabase } from "./dependencies/database/sequelize";
 import { loggerFactory } from "./dependencies/logger/logger-factory";
 import { healthRouter } from "./health/health-router";
 
