@@ -1,1 +1,2 @@
-export * from "./application-logger-factory";
+export * from "./logger";
+export * from "./pino-logger";

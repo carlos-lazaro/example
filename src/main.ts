@@ -3,12 +3,12 @@ import express from "express";
 
 import { env } from "./config";
 import { SequelizeDatabase } from "./dependencies/database/sequelize";
-import { loggerFactory } from "./dependencies/logger/logger-factory";
+import { PinoLogger } from "./dependencies/logger";
 import { healthRouter } from "./health/health-router";
 
 function boostrap() {
   const app = express();
-  const logger = loggerFactory.get();
+  const logger = new PinoLogger(env);
   const db = new SequelizeDatabase(env, logger);
 
   app.use(bodyParser.json());

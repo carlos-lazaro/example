@@ -1,7 +1,7 @@
 import { Sequelize } from "sequelize";
 
 import { Env } from "../../../config/interface";
-import { Logger } from "../../logger/interfaces";
+import { Logger } from "../../logger";
 import { ConnectionDatabase } from "../interface";
 
 export class SequelizeDatabase implements ConnectionDatabase {

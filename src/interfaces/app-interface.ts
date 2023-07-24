@@ -1,5 +1,5 @@
 import { Env } from "../config/interface";
-import { Logger } from "../dependencies/logger/interfaces/logger-interface";
+import { Logger } from "../dependencies/logger";
 
 export interface App {
   app: Express.Application;
