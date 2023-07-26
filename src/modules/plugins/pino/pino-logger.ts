@@ -1,7 +1,7 @@
 import pino, { Logger as PinoLoggerType } from "pino";
 
-import { Env } from "../../config/interface";
-import { Logger, LogMessage } from "./logger";
+import { Env } from "../../../core/config/interface";
+import { Logger, LogMessage } from "../../../interfaces";
 
 export class PinoLogger implements Logger {
   private readonly logger: PinoLoggerType;
@@ -13,7 +13,7 @@ export class PinoLogger implements Logger {
       messageKey: "message",
       base: null,
       timestamp() {
-        return `Time: ${new Date(Date.now()).toLocaleString("en-US", {
+        return ` - Time: ${new Date(Date.now()).toLocaleString("en-US", {
           hour12: false,
           timeZoneName: "short",
           timeZone: "UTC",

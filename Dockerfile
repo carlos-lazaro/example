@@ -5,16 +5,10 @@ FROM node:18
 WORKDIR /app
 
 # Copy package.json and package-lock.json to the working directory
-COPY package*.json ./
-
-# Copy tsconfig.json and tsconfig.prod.json to the working directory
-COPY tsconfig*.json ./
+COPY .  .
 
 # Install project dependencies
 RUN npm install
-
-# Copy the rest of the project files to the working directory
-COPY src ./src
 
 # Build the project
 RUN npm run build

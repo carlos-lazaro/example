@@ -4,7 +4,7 @@ export interface LogMessage {
   [key: string]: unknown;
 }
 
-type LogMethod = (message: LogMessage | string) => void;
+export type LogMethod = (message: LogMessage | string) => void;
 
 export type Level = "fatal" | "error" | "warn" | "info" | "debug";
 

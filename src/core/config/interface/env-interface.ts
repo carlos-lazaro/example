@@ -1,4 +1,4 @@
-import { LoggerLevel } from "../../dependencies/logger";
+import { LoggerLevel } from "../../../interfaces";
 
 export interface Env {
   server: {

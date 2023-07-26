@@ -1,27 +1,17 @@
-import bodyParser from "body-parser";
-import express from "express";
+import { App } from "./app";
 
-import { env } from "./config";
-import { SequelizeDatabase } from "./dependencies/database/sequelize";
-import { PinoLogger } from "./dependencies/logger";
-import { healthRouter } from "./health/health-router";
-
-function boostrap() {
-  const app = express();
-  const logger = new PinoLogger(env);
-  const db = new SequelizeDatabase(env, logger);
-
-  app.use(bodyParser.json());
-
-  app.use("/health", healthRouter);
-
-  const { port } = env.server;
-
-  db.connect();
-
-  app.listen(port, () => {
-    console.log(`[APP] - Starting application on port ${port}`);
-  });
+try {
+  new App().start().catch(handleError);
+} catch (e) {
+  handleError(e);
 }
 
-boostrap();
+process.on("uncaughtException", (err) => {
+  console.log("uncaughtException", err);
+  process.exit(1);
+});
+
+function handleError(error: unknown) {
+  console.log(error);
+  process.exit(1);
+}

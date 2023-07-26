@@ -1,8 +1,7 @@
 import { Sequelize } from "sequelize";
 
-import { Env } from "../../../config/interface";
-import { Logger } from "../../logger";
-import { ConnectionDatabase } from "../interface";
+import { Env } from "../../../core/config/interface";
+import { ConnectionDatabase, Logger } from "../../../interfaces";
 
 export class SequelizeDatabase implements ConnectionDatabase {
   readonly env: Env;
