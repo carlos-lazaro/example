@@ -3,6 +3,7 @@ import http from "http";
 
 import { Env } from "./core/config/interface";
 import { ConnectionDatabase, Logger } from "./interfaces";
+import { TypeormDatabase } from "./modules";
 import { container } from "./modules/dependency-injection";
 import {
   BodyParserMiddleware,
@@ -11,7 +12,6 @@ import {
   ExpressRateLimitMiddleware,
   HelmedMiddleware,
 } from "./modules/middlewares";
-import { SequelizeDatabase } from "./modules/plugins";
 
 export class App {
   readonly app: Express;
@@ -27,7 +27,7 @@ export class App {
     this.logger = logger;
     this.env = env;
     this.app = express();
-    this.db = new SequelizeDatabase(this.env, this.logger);
+    this.db = new TypeormDatabase(this.env, this.logger);
 
     this.loadMiddlewares();
 

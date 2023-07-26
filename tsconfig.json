@@ -11,12 +11,11 @@
     "noEmit": false,
     "resolveJsonModule": true,
     "noUnusedLocals": true,
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false
   },
-  "include": [
-    "src/**/**.ts",
-    "tests/**/**.ts",
-    "playground/**/**.ts",
-  ],
+  "include": ["src/**/**.ts", "tests/**/**.ts", "playground/**/**.ts"],
   "exclude": ["node_modules"]
 }

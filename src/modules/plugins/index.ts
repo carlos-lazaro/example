@@ -1,2 +1,2 @@
 export * from "./pino";
-export * from "./sequelize";
+export * from "./typeorm";
