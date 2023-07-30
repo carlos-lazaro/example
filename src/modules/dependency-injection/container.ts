@@ -1,7 +1,7 @@
 import * as Awilix from "awilix";
 
 import { env } from "../../core";
-import { PinoLogger } from "../plugins";
+import { PinoLogger, TypeormDatabase } from "../plugins";
 import { DependencyContainer } from "./interface";
 
 const container = Awilix.createContainer<DependencyContainer>({
@@ -10,7 +10,21 @@ const container = Awilix.createContainer<DependencyContainer>({
 
 container.register({
   env: Awilix.asValue(env),
-  logger: Awilix.asClass(PinoLogger).inject(() => env),
+});
+
+container.register({
+  logger: Awilix.asClass(PinoLogger)
+    .inject(() => container.resolve("env"))
+    .singleton(),
+});
+
+container.register({
+  database: Awilix.asClass(TypeormDatabase)
+    .inject(() => ({
+      env: container.resolve("env"),
+      logger: container.resolve("logger"),
+    }))
+    .singleton(),
 });
 
 export { container };

@@ -1,7 +1,7 @@
 import pino, { Logger as PinoLoggerType } from "pino";
 
+import { Logger, LogMessage } from "../../../core";
 import { Env } from "../../../core/config/interface";
-import { Logger, LogMessage } from "../../../interfaces";
 
 export class PinoLogger implements Logger {
   private readonly logger: PinoLoggerType;

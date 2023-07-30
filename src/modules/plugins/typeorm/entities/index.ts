@@ -1,1 +1,1 @@
-export * from "./User-typeorm";
+export * from "./user-typeorm";

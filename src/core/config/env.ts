@@ -1,7 +1,7 @@
 import { config } from "dotenv";
 config();
 
-import { LoggerLevel } from "../../interfaces";
+import { LoggerLevel } from "../logger";
 import { Environment } from "./constant";
 import { Env } from "./interface";
 

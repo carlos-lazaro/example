@@ -1,16 +1,27 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import * as Awilix from "awilix";
+import { Column, Entity, PrimaryGeneratedColumn, Repository } from "typeorm";
+
+import { DependencyContainer } from "../../../dependency-injection";
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 100 })
+  @Column({ type: "varchar", length: 100 })
   name: string;
 
-  @Column({ length: 100 })
+  @Column({ type: "varchar", length: 100 })
   lastName: string;
 
-  @Column("number")
+  @Column({ type: "int" })
   age: number;
 }
+
+export type UserTypeormRepository = Repository<User>;
+
+export const getUserTypeormRepository = (
+  container: Awilix.AwilixContainer<DependencyContainer>
+) => {
+  return container.resolve("database").appDataSource.getRepository(User);
+};
