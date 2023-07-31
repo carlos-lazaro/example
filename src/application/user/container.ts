@@ -1,8 +1,7 @@
 import * as Awilix from "awilix";
 
 import { Logger } from "../../core";
-import { DependencyContainer } from "../../modules";
-import { getUserTypeormRepository } from "../../modules/plugins/typeorm/entities/user-typeorm";
+import { DependencyContainer, getUserTypeormRepository } from "../../modules";
 import {
   UserCreateController,
   UserDeleteController,
