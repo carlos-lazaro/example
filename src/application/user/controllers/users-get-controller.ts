@@ -4,9 +4,9 @@ import { Logger } from "../../../core";
 import { Pagination } from "../../common/entities";
 import { SchemasConfig } from "../../common/middleware/schema-validation-middleware";
 import { UserService } from "../interfaces";
-import { Controller } from "./controller";
+import { Controller } from "../interfaces/controller-interface";
 
-export default class UsersGetController implements Controller {
+export class UsersGetController implements Controller {
   readonly logger;
   readonly userService;
 

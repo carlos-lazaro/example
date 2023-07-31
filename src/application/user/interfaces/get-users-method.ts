@@ -1,4 +1,4 @@
-import { Pagination } from "../../common/entities/pagination-entity";
+import { Pagination } from "../../common/entities";
 import { User } from "../entities";
 
 export type getUsersMethod = (

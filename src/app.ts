@@ -1,21 +1,23 @@
 import express, { Express } from "express";
 import http from "http";
 
-import { errorHandlerMiddleware } from "./application/common/middleware/error-handle-middleware";
-import { healthRouter } from "./application/health/health-router";
-import { registerUserDependencies } from "./application/user";
-import { userRouter } from "./application/user/routes";
+import {
+  errorHandlerMiddleware,
+  healthRouter,
+  registerUserDependencies,
+  userRouter,
+} from "./application";
 import { Logger } from "./core";
 import { Env } from "./core/config/interface";
-import { TypeormDatabase } from "./modules";
-import { container } from "./modules/dependency-injection";
 import {
   BodyParserMiddleware,
+  container,
   CookieParserMiddleware,
   CorsMiddleware,
   ExpressRateLimitMiddleware,
   HelmedMiddleware,
-} from "./modules/middlewares";
+  TypeormDatabase,
+} from "./modules";
 
 export class App {
   readonly app: Express;
@@ -48,8 +50,8 @@ export class App {
   loadRoutes() {
     this.logger.info("⚙️ routes loading...");
 
-    this.app.use("/health", healthRouter);
-    this.app.use("/user", userRouter);
+    this.app.use("/api/v1/health", healthRouter);
+    this.app.use("/api/v1/user", userRouter);
     this.app.use("/test", (req, res) => {
       this.logger.info("tesito");
       res.send({ tesito: true });
@@ -79,7 +81,7 @@ export class App {
       })
       .then(() => {
         this.logger.info(
-          `👍 Backend App is running at http://localhost:${this.env.server.port} ,env: ${this.env}`
+          `👍 Backend App is running at http://localhost:${this.env.server.port}`
         );
       })
       .catch((error) => {

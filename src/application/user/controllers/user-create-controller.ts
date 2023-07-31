@@ -4,9 +4,9 @@ import { Logger } from "../../../core";
 import { SchemasConfig } from "../../common/middleware/schema-validation-middleware";
 import { User } from "../entities";
 import { UserService } from "../interfaces";
-import { Controller } from "./controller";
+import { Controller } from "../interfaces/controller-interface";
 
-export default class UserCreateController implements Controller {
+export class UserCreateController implements Controller {
   readonly logger;
   readonly userService;
 

@@ -1,17 +1,16 @@
 import * as Awilix from "awilix";
 
-import { Logger } from "../../../../core";
+import { Logger } from "../../core";
+import { DependencyContainer, getUserTypeormRepository } from "../../modules";
 import {
-  DependencyContainer,
-  getUserTypeormRepository,
-} from "../../../../modules";
-import UserCreateController from "../../controllers/user-create-controller";
-import UserDeleteController from "../../controllers/user-delete-controller";
-import UserGetByIdController from "../../controllers/user-get-by-id-controller";
-import UserUpdateController from "../../controllers/user-update-controller";
-import UsersGetController from "../../controllers/users-get-controller";
-import { UserRepository } from "../../user-repository";
-import { UserService } from "../../user-service";
+  UserCreateController,
+  UserDeleteController,
+  UserGetByIdController,
+  UsersGetController,
+  UserUpdateController,
+} from "./controllers";
+import { UserRepositoryImplement } from "./user-repository-implement";
+import { UserServiceImplement } from "./user-service-implement";
 
 export const registerUserDependencies = async (
   logger: Logger,
@@ -25,8 +24,8 @@ export const registerUserDependencies = async (
     userGetByIdController: Awilix.asClass(UserGetByIdController).singleton(),
     userUpdateController: Awilix.asClass(UserUpdateController).singleton(),
     userDeleteController: Awilix.asClass(UserDeleteController).singleton(),
-    userService: Awilix.asClass(UserService).singleton(),
-    userRepository: Awilix.asClass(UserRepository)
+    userService: Awilix.asClass(UserServiceImplement).singleton(),
+    userRepository: Awilix.asClass(UserRepositoryImplement)
       .inject(() => ({
         userTypeormRepository: getUserTypeormRepository(container),
       }))

@@ -1,4 +1,4 @@
-import { UserDependencyContainer } from "../../../application/user/module/dependency-injection";
+import { UserDependencyContainer } from "../../../application";
 import { Logger } from "../../../core";
 import { Env } from "../../../core/config/interface";
 import { TypeormDatabase } from "../../plugins";

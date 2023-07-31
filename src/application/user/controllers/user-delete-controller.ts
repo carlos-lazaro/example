@@ -4,9 +4,9 @@ import { Logger } from "../../../core";
 import { Id } from "../../common/entities/id-entity";
 import { SchemasConfig } from "../../common/middleware/schema-validation-middleware";
 import { UserService } from "../interfaces";
-import { Controller } from "./controller";
+import { Controller } from "../interfaces/controller-interface";
 
-export default class UserDeleteController implements Controller {
+export class UserDeleteController implements Controller {
   readonly logger;
   readonly userService;
 

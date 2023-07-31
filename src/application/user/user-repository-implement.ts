@@ -1,9 +1,9 @@
 import { UserTypeormRepository } from "../../modules";
-import { Pagination } from "../common/entities/pagination-entity";
+import { Pagination } from "../common/entities";
 import { User, UserId } from "./entities";
-import { UserRepository as IUserRepository } from "./interfaces";
+import { UserRepository } from "./interfaces";
 
-export class UserRepository implements IUserRepository {
+export class UserRepositoryImplement implements UserRepository {
   private readonly userModel;
 
   constructor(dependencies: { userTypeormRepository: UserTypeormRepository }) {

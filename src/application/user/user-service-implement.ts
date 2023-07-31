@@ -1,8 +1,8 @@
 import { Pagination } from "../common/entities";
 import { User, UserId } from "./entities";
-import { UserRepository, UserService as IUserService } from "./interfaces";
+import { UserRepository, UserService } from "./interfaces";
 
-export class UserService implements IUserService {
+export class UserServiceImplement implements UserService {
   private readonly userRepository;
 
   constructor(dependencies: { userRepository: UserRepository }) {

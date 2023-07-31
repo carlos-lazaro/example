@@ -3,9 +3,8 @@ import { NextFunction, Request, Response } from "express";
 
 import { Logger } from "../../../core";
 import { container } from "../../../modules";
-import { UuidGenerator } from "../../common";
-import { schemaValidationMiddleware } from "../../common/middleware/schema-validation-middleware";
-import { Controller, HandleRequestType } from "../controllers";
+import { schemaValidationMiddleware, UuidGenerator } from "../../common";
+import { Controller, HandleRequestType } from "../interfaces";
 
 export const handleRequest =
   (controllerInstanceName: HandleRequestType) =>
