@@ -1,5 +1,12 @@
 import * as Awilix from "awilix";
-import { Column, Entity, PrimaryGeneratedColumn, Repository } from "typeorm";
+import {
+  Column,
+  Entity,
+  Index,
+  PrimaryGeneratedColumn,
+  Repository,
+  Unique,
+} from "typeorm";
 
 import { DependencyContainer } from "../../../dependency-injection";
 
@@ -8,10 +15,15 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ type: "varchar", length: 100 })
+  @Column({ type: "varchar", length: 100, nullable: false })
+  @Unique(["email"])
+  @Index()
+  email: string;
+
+  @Column({ type: "varchar", length: 50 })
   name: string;
 
-  @Column({ type: "varchar", length: 100 })
+  @Column({ type: "varchar", length: 50 })
   lastName: string;
 
   @Column({ type: "int" })

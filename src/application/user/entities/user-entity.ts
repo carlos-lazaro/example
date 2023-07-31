@@ -2,13 +2,26 @@ import Joi from "joi";
 
 import { Id } from "../../common/entities/id-entity";
 
+interface Dependencies {
+  name: string;
+  email: string;
+  lastName?: string;
+  age?: number;
+}
+
+interface DependenciesID extends Dependencies {
+  id: number;
+}
+
 export class User {
   readonly name;
+  readonly email;
   readonly lastName;
   readonly age;
 
-  constructor(dependencies: { name: string; lastName: string; age: number }) {
+  constructor(dependencies: Dependencies) {
     this.name = dependencies.name;
+    this.email = dependencies.email;
     this.lastName = dependencies.lastName;
     this.age = dependencies.age;
   }
@@ -16,8 +29,9 @@ export class User {
   public static Schema() {
     return Joi.object({
       name: Joi.string().trim().required(),
-      lastName: Joi.string().trim().required(),
-      age: Joi.number().positive().required(),
+      email: Joi.string().trim().email().required(),
+      lastName: Joi.string().trim().optional(),
+      age: Joi.number().positive().optional(),
     });
   }
 }
@@ -25,12 +39,7 @@ export class User {
 export class UserId extends User {
   readonly id;
 
-  constructor(dependencies: {
-    id: number;
-    name: string;
-    lastName: string;
-    age: number;
-  }) {
+  constructor(dependencies: DependenciesID) {
     super(dependencies);
     this.id = dependencies.id;
   }

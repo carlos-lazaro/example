@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
 import { Logger } from "../../../core";
+import { NotFoundError } from "../../common";
 import { Id } from "../../common/entities/id-entity";
 import { SchemasConfig } from "../../common/middleware/schema-validation-middleware";
 import { UserService } from "../interfaces";
@@ -25,6 +26,8 @@ export class UserGetByIdController implements Controller {
     this.logger.child({ id }).info("Received a request for get user by id");
 
     const user = await this.userService.getById(id);
+
+    if (!user) throw new NotFoundError("User not found", req.ip);
 
     res.status(200).send({ user });
   }

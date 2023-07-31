@@ -22,9 +22,7 @@ export class UserCreateController implements Controller {
   async run(req: Request, res: Response, next: NextFunction) {
     const user = new User(req.body);
 
-    this.logger
-      .child({ user })
-      .info(`Received a request for save user, ${user}`);
+    this.logger.child({ user }).info("Received a request for save user");
 
     const response = await this.userService.create(user);
 

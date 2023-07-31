@@ -2,6 +2,7 @@ import express, { Express } from "express";
 import http from "http";
 
 import {
+  errorBaseErrorHandlerMiddleware,
   errorHandlerMiddleware,
   healthRouter,
   registerUserDependencies,
@@ -14,6 +15,7 @@ import {
   container,
   CookieParserMiddleware,
   CorsMiddleware,
+  errorTypeOrmErrorHandlerMiddleware,
   ExpressRateLimitMiddleware,
   HelmedMiddleware,
   TypeormDatabase,
@@ -47,6 +49,14 @@ export class App {
     ExpressRateLimitMiddleware(this.app);
   }
 
+  loadErrorMiddlewares() {
+    this.logger.info("⚙️ error middlewares loading...");
+
+    this.app.use(errorTypeOrmErrorHandlerMiddleware);
+    this.app.use(errorBaseErrorHandlerMiddleware);
+    this.app.use(errorHandlerMiddleware);
+  }
+
   loadRoutes() {
     this.logger.info("⚙️ routes loading...");
 
@@ -56,8 +66,6 @@ export class App {
       this.logger.info("tesito");
       res.send({ tesito: true });
     });
-
-    this.app.use(errorHandlerMiddleware);
   }
 
   async loadDependecies() {
@@ -75,6 +83,7 @@ export class App {
       .then(() => {
         this.loadMiddlewares();
         this.loadRoutes();
+        this.loadErrorMiddlewares();
       })
       .then(async () => {
         this.httpServer = await this.app.listen(this.env.server.port);
