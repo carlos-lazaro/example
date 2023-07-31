@@ -1,3 +1,5 @@
+import { DeleteResult } from "typeorm";
+
 import { UserTypeormRepository } from "../../modules";
 import { Pagination } from "../common/entities";
 import { User, UserId } from "./entities";
@@ -38,7 +40,7 @@ export class UserRepositoryImplement implements UserRepository {
   async delete(id: number): Promise<number> {
     return await this.userModel
       .delete(id)
-      .then((value) => {
+      .then((value: DeleteResult) => {
         return value.affected ? value.affected : 0;
       })
       .catch(() => {
