@@ -1,0 +1,46 @@
+version: "3"
+
+services:
+  app:
+    image: nodejs
+    container_name: example_nodejs
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - $PORT:$PORT
+    networks:
+      - app-network
+    volumes:
+      - .:/home/node/app
+      - /home/node/app/node_modules
+    env_file:
+      - .env
+
+  db:
+    image: mysql:8.0
+    container_name: example_mysql
+    cap_add:
+      - SYS_NICE
+    restart: always
+    networks:
+      - app-network
+    environment:
+      - MYSQL_DATABASE=$MYSQL_DATABASE
+      - MYSQL_USER=$MYSQL_USER
+      - MYSQL_ROOT_PASSWORD=$MYSQL_PASSWORD
+    ports:
+      - "$MYSQL_PORT:3306"
+    volumes:
+      - db:/var/lib/mysql
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    env_file:
+      - .env
+
+volumes:
+  db:
+    driver: local
+
+networks:
+  app-network:
