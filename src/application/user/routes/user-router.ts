@@ -1,6 +1,7 @@
 import express from "express";
 
-import { catchAsyncErrorsMiddleware, handleRequest } from "../../common";
+import { catchAsyncErrorsMiddleware } from "../../common";
+import { handleRequest } from "./handle-request";
 
 const userRouter = express.Router();
 

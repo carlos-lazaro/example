@@ -2,12 +2,12 @@ import express, { Express } from "express";
 import http from "http";
 
 import {
-  errorBaseErrorHandlerMiddleware,
   errorHandlerMiddleware,
   healthRouter,
   registerUserDependencies,
   userRouter,
 } from "./application";
+import { authRouter, registerAuthDependencies } from "./application/auth";
 import { Logger } from "./core";
 import { Env } from "./core/config/interface";
 import {
@@ -15,7 +15,6 @@ import {
   container,
   CookieParserMiddleware,
   CorsMiddleware,
-  errorTypeOrmErrorHandlerMiddleware,
   ExpressRateLimitMiddleware,
   HelmedMiddleware,
   TypeormDatabase,
@@ -52,8 +51,6 @@ export class App {
   loadErrorMiddlewares() {
     this.logger.info("⚙️ error middlewares loading...");
 
-    this.app.use(errorTypeOrmErrorHandlerMiddleware);
-    this.app.use(errorBaseErrorHandlerMiddleware);
     this.app.use(errorHandlerMiddleware);
   }
 
@@ -61,6 +58,7 @@ export class App {
     this.logger.info("⚙️ routes loading...");
 
     this.app.use("/api/v1/health", healthRouter);
+    this.app.use("/api/v1/auth", authRouter);
     this.app.use("/api/v1/user", userRouter);
     this.app.use("/test", (req, res) => {
       this.logger.info("tesito");
@@ -72,6 +70,7 @@ export class App {
     this.logger.info("⚙️ dependencies loading...");
 
     await registerUserDependencies(this.logger, container);
+    await registerAuthDependencies(this.logger, container);
   }
 
   async start(): Promise<void> {

@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { TypeORMError } from "typeorm";
+// import { TypeORMError } from "typeorm";
 
-import { HttpStatusCode } from "../../../../application";
+// import { HttpStatusCode } from "../../../../application";
 
 export function errorTypeOrmErrorHandlerMiddleware(
   error: any,
@@ -9,11 +9,14 @@ export function errorTypeOrmErrorHandlerMiddleware(
   res: Response,
   next: NextFunction
 ) {
-  if (error instanceof TypeORMError) {
-    const toe = error as TypeORMError;
+  console.log("------------> TypeORMError, ");
+  // console.log("------------> TypeORMError, ", error);
+  // if (error instanceof TypeORMError) {
+  //   console.log("------------> TypeORMError, ");
+  //   const toe = error as TypeORMError;
 
-    res.status(HttpStatusCode.Conflict).json({ error: toe.message });
-  }
+  //   res.status(HttpStatusCode.Conflict).json({ error: toe.message });
+  // }
 
   next();
 }

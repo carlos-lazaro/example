@@ -2,7 +2,7 @@ import { DataSource } from "typeorm";
 
 import { ConnectionDatabase, Logger } from "../../../core";
 import { Env } from "../../../core/config/interface";
-import { User } from "./entities";
+import { Auth, User } from "./entities";
 
 export class TypeormDatabase implements ConnectionDatabase {
   readonly env: Env;
@@ -25,7 +25,7 @@ export class TypeormDatabase implements ConnectionDatabase {
       synchronize: true,
       logging: true,
 
-      entities: [User],
+      entities: [Auth, User],
       subscribers: [],
       migrations: [],
     });

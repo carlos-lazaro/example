@@ -3,8 +3,9 @@ import Joi from "joi";
 import { Id } from "../../common/entities/id-entity";
 
 interface Dependencies {
-  name: string;
   email: string;
+  password: string;
+  name?: string;
   lastName?: string;
   age?: number;
 }
@@ -14,22 +15,29 @@ interface DependenciesID extends Dependencies {
 }
 
 export class User {
-  readonly name;
   readonly email;
+  readonly password;
+  readonly name;
   readonly lastName;
   readonly age;
 
   constructor(dependencies: Dependencies) {
-    this.name = dependencies.name;
     this.email = dependencies.email;
+    this.password = dependencies.password;
+    this.name = dependencies.name;
     this.lastName = dependencies.lastName;
     this.age = dependencies.age;
   }
 
+  public static noSensitiveInformation(user: User | UserId) {
+    return { ...user, auth: undefined, password: undefined };
+  }
+
   public static Schema() {
     return Joi.object({
-      name: Joi.string().trim().required(),
       email: Joi.string().trim().email().required(),
+      password: Joi.string().trim().required(),
+      name: Joi.string().trim().optional(),
       lastName: Joi.string().trim().optional(),
       age: Joi.number().positive().optional(),
     });

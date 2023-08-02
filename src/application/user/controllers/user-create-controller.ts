@@ -26,6 +26,6 @@ export class UserCreateController implements Controller {
 
     const response = await this.userService.create(user);
 
-    res.status(201).send(response);
+    res.status(201).send({ user: User.noSensitiveInformation(response) });
   }
 }

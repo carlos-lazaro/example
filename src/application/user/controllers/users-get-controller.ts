@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { Logger } from "../../../core";
 import { Pagination } from "../../common/entities";
 import { SchemasConfig } from "../../common/middleware/schema-validation-middleware";
+import { User } from "../entities";
 import { UserService } from "../interfaces";
 import { Controller } from "../interfaces/controller-interface";
 
@@ -28,6 +29,10 @@ export class UsersGetController implements Controller {
 
     const [items, count] = await this.userService.get(pagination);
 
-    res.status(200).send({ items, count, page: pagination.page });
+    res.status(200).send({
+      items: items.map((data) => User.noSensitiveInformation(data)),
+      page: pagination.page,
+      count,
+    });
   }
 }

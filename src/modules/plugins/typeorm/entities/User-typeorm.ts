@@ -3,12 +3,15 @@ import {
   Column,
   Entity,
   Index,
+  JoinColumn,
+  OneToOne,
   PrimaryGeneratedColumn,
   Repository,
   Unique,
 } from "typeorm";
 
 import { DependencyContainer } from "../../../dependency-injection";
+import { Auth } from "./auth-typeorm";
 
 @Entity()
 export class User {
@@ -20,6 +23,9 @@ export class User {
   @Index()
   email: string;
 
+  @Column({ type: "varchar", nullable: false })
+  password: string;
+
   @Column({ type: "varchar", length: 50 })
   name: string;
 
@@ -28,6 +34,10 @@ export class User {
 
   @Column({ type: "int" })
   age: number;
+
+  @OneToOne(() => Auth, (auth) => auth.user, { cascade: true })
+  @JoinColumn()
+  auth: Auth;
 }
 
 export type UserTypeormRepository = Repository<User>;

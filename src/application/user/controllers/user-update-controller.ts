@@ -3,7 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import { Logger } from "../../../core";
 import { NotFoundError } from "../../common";
 import { SchemasConfig } from "../../common/middleware/schema-validation-middleware";
-import { UserId } from "../entities";
+import { User, UserId } from "../entities";
 import { UserService } from "../interfaces";
 import { Controller } from "../interfaces/controller-interface";
 
@@ -29,6 +29,6 @@ export class UserUpdateController implements Controller {
 
     if (!userUpdated) throw new NotFoundError("User not found", req.ip);
 
-    res.status(200).send({ user: userUpdated });
+    res.status(200).send({ user: User.noSensitiveInformation(userUpdated) });
   }
 }
