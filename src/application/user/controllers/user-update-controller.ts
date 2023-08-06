@@ -1,11 +1,16 @@
 import { NextFunction, Request, Response } from "express";
 
-import { Logger } from "../../../core";
-import { NotFoundError } from "../../common";
-import { SchemasConfig } from "../../common/middleware/schema-validation-middleware";
-import { User, UserId } from "../entities";
+import {
+  Controller,
+  HttpStatusCode,
+  Logger,
+  NotFoundError,
+  SchemasConfig,
+} from "../../../server";
+import { IdDto, partialSchema } from "../../shared";
+import { UserDto } from "../dtos";
+import { User } from "../entities";
 import { UserService } from "../interfaces";
-import { Controller } from "../interfaces/controller-interface";
 
 export class UserUpdateController implements Controller {
   readonly logger;
@@ -17,18 +22,25 @@ export class UserUpdateController implements Controller {
   }
 
   schema(): SchemasConfig | null {
-    return { body: UserId.Schema() };
+    return {
+      params: IdDto.Schema(),
+      body: partialSchema(UserDto.Schema()).options({ allowUnknown: true }),
+    };
   }
 
   async run(req: Request, res: Response, next: NextFunction) {
-    const user = new UserId(req.body);
+    const userDto = new UserDto(req.body);
+    const user = new User(userDto);
 
     this.logger.child({ user }).info("Received a request for update user");
 
-    const userUpdated = await this.userService.update(user);
+    const userUpdated = await this.userService.updatePasswordExcludeFields(
+      user,
+      Number(req.params.id)
+    );
 
     if (!userUpdated) throw new NotFoundError("User not found", req.ip);
 
-    res.status(200).send({ user: User.noSensitiveInformation(userUpdated) });
+    res.status(HttpStatusCode.Ok).send({ user: userUpdated });
   }
 }

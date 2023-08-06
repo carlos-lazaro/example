@@ -1,7 +1,12 @@
 import { FindOneOptions } from "typeorm";
 
-import { UserId } from "../entities";
+import { User } from "../entities";
 
-export type getUserByMethod = (
-  options: FindOneOptions<UserId>
-) => Promise<UserId | null>;
+export type getUserByOptionsMethod = (
+  options: FindOneOptions<User>
+) => Promise<User | null>;
+
+export type getUserByOptionsExcludeFieldsMethod = (
+  options: FindOneOptions<User>,
+  toExclude?: (keyof User)[]
+) => Promise<Partial<User> | null>;

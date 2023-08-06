@@ -1,10 +1,14 @@
 import { NextFunction, Request, Response } from "express";
 
-import { Logger } from "../../../core";
-import { SchemasConfig } from "../../common/middleware/schema-validation-middleware";
+import {
+  Controller,
+  HttpStatusCode,
+  Logger,
+  SchemasConfig,
+} from "../../../server";
+import { UserDto } from "../dtos";
 import { User } from "../entities";
 import { UserService } from "../interfaces";
-import { Controller } from "../interfaces/controller-interface";
 
 export class UserCreateController implements Controller {
   readonly logger;
@@ -16,16 +20,17 @@ export class UserCreateController implements Controller {
   }
 
   schema(): SchemasConfig | null {
-    return { body: User.Schema() };
+    return { body: UserDto.Schema().options({ allowUnknown: true }) };
   }
 
   async run(req: Request, res: Response, next: NextFunction) {
-    const user = new User(req.body);
+    const userDto = new UserDto(req.body);
+    const user = new User(userDto);
 
     this.logger.child({ user }).info("Received a request for save user");
 
-    const response = await this.userService.create(user);
+    const response = await this.userService.createExcludeFields(user);
 
-    res.status(201).send({ user: User.noSensitiveInformation(response) });
+    res.status(HttpStatusCode.Created).send({ user: response });
   }
 }

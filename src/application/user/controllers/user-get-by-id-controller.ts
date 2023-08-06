@@ -1,12 +1,14 @@
 import { NextFunction, Request, Response } from "express";
 
-import { Logger } from "../../../core";
-import { NotFoundError } from "../../common";
-import { Id } from "../../common/entities/id-entity";
-import { SchemasConfig } from "../../common/middleware/schema-validation-middleware";
-import { User } from "../entities";
+import {
+  Controller,
+  HttpStatusCode,
+  Logger,
+  NotFoundError,
+  SchemasConfig,
+} from "../../../server";
+import { IdDto } from "../../shared";
 import { UserService } from "../interfaces";
-import { Controller } from "../interfaces/controller-interface";
 
 export class UserGetByIdController implements Controller {
   readonly logger;
@@ -18,7 +20,7 @@ export class UserGetByIdController implements Controller {
   }
 
   schema(): SchemasConfig | null {
-    return { params: Id.Schema() };
+    return { params: IdDto.Schema() };
   }
 
   async run(req: Request, res: Response, next: NextFunction) {
@@ -26,10 +28,12 @@ export class UserGetByIdController implements Controller {
 
     this.logger.child({ id }).info("Received a request for get user by id");
 
-    const user = await this.userService.getBy({ where: { id: id } });
+    const user = await this.userService.getByOptionsExcludeFields({
+      where: { id: id },
+    });
 
     if (!user) throw new NotFoundError("User not found", req.ip);
 
-    res.status(200).send({ user: User.noSensitiveInformation(user) });
+    res.status(HttpStatusCode.Ok).send({ user: user });
   }
 }

@@ -1,53 +1,40 @@
-import { DeleteResult, FindOneOptions } from "typeorm";
+import { FindOneOptions } from "typeorm";
 
-import { UserTypeormRepository } from "../../modules";
-import { Pagination } from "../common/entities";
-import { User, UserId } from "./entities";
+import { BaseRepositoryTypeorm, PaginationDto } from "../shared";
+import { User, UserTypeormRepository } from "./entities";
 import { UserRepository } from "./interfaces";
 
-export class UserRepositoryImplement implements UserRepository {
-  private readonly userModel;
-
+export class UserRepositoryImplement
+  extends BaseRepositoryTypeorm<User>
+  implements UserRepository
+{
   constructor(dependencies: { userTypeormRepository: UserTypeormRepository }) {
-    this.userModel = dependencies.userTypeormRepository;
+    super({ repository: dependencies.userTypeormRepository });
   }
 
-  async create(user: User): Promise<UserId> {
-    return await this.userModel.save({
-      ...user,
-      auth: { passwordRecord: [user.password] },
-    });
+  async create(user: User): Promise<User> {
+    return await super.Create(user);
   }
 
   async delete(id: number): Promise<number> {
-    return await this.userModel
-      .delete(id)
-      .then((value: DeleteResult) => {
-        return value.affected ? value.affected : 0;
-      })
-      .catch(() => {
-        return 0;
-      });
+    return await super.Delete(id);
   }
 
-  async get({ page, limit }: Pagination): Promise<[UserId[], number]> {
-    return await this.userModel.findAndCount({
-      skip: (page - 1) * limit,
-      take: limit,
-    });
+  async get(paginationDto: PaginationDto): Promise<[User[], number]> {
+    return await super.Get(paginationDto);
   }
 
-  async getBy(options: FindOneOptions<UserId>): Promise<UserId | null> {
-    return await this.userModel.findOne(options);
+  async getByOptions(options: FindOneOptions<User>): Promise<User | null> {
+    return await super.GetOne(options);
   }
 
-  async update(user: UserId): Promise<UserId | null> {
-    const userDb = await this.getBy({ where: { id: user.id } });
+  async update(user: User, id: number): Promise<User | null> {
+    const userDb = await this.GetOne({ where: { id: id } });
 
     if (!userDb) return null;
 
     const userMerge = { ...userDb, ...user };
 
-    return await this.userModel.save(userMerge);
+    return await this.repository.save(userMerge);
   }
 }
