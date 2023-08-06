@@ -1,4 +1,8 @@
 import {
+  checkUserPasswordExcludeFieldsMethod,
+  checkUserPasswordMethod,
+} from "./check-password-user-method";
+import {
   createUserExcludeFieldsMethod,
   createUserMethod,
 } from "./create-user-method";
@@ -41,4 +45,6 @@ export interface UserService {
    */
   updatePassword: updateUserPasswordMethod;
   updatePasswordExcludeFields: updateUserExcludePasswordFieldsMethod;
+  checkPassword: checkUserPasswordMethod;
+  checkPasswordExcludeFields: checkUserPasswordExcludeFieldsMethod;
 }

@@ -3,4 +3,4 @@ import { LoginEmailDto } from "../dtos";
 
 export type authenticationSigninMethod = (
   loginEmailDto: LoginEmailDto
-) => Promise<User | null>;
+) => Promise<Partial<User> | null>;

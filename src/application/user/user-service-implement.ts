@@ -1,6 +1,7 @@
 import { FindOneOptions } from "typeorm";
 
-import { generatePasswordHash } from "../../server";
+import { comparatePasswordHash, generatePasswordHash } from "../../server";
+import { LoginEmailDto } from "../authentication";
 import { PaginationDto } from "../shared";
 import { UserDto } from "./dtos";
 import { User } from "./entities";
@@ -95,6 +96,32 @@ export class UserServiceImplement implements UserService {
     toExclude: (keyof User)[] = UserDto.fieldsToExlcude
   ): Promise<Partial<User> | null> {
     const userDb = await this.updatePassword(user, id);
+
+    return this.evaluateAndCleanUser(userDb, toExclude);
+  }
+
+  async checkPassword(loginEmailDto: LoginEmailDto): Promise<User | null> {
+    const user = await this.getByOptions({
+      where: { email: loginEmailDto.email },
+    });
+
+    if (!user) return null;
+
+    const result = await comparatePasswordHash(
+      loginEmailDto.password,
+      user.password
+    );
+
+    if (!result) return null;
+
+    return user;
+  }
+
+  async checkPasswordExcludeFields(
+    loginEmailDto: LoginEmailDto,
+    toExclude: (keyof User)[] = UserDto.fieldsToExlcude
+  ): Promise<Partial<User> | null> {
+    const userDb = await this.checkPassword(loginEmailDto);
 
     return this.evaluateAndCleanUser(userDb, toExclude);
   }

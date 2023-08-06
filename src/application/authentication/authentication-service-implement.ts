@@ -1,4 +1,3 @@
-import { comparatePasswordHash } from "../../server";
 import { User, UserService } from "../user";
 import { LoginEmailDto } from "./dtos";
 import { AuthenticationRepository, AuthenticationService } from "./interfaces";
@@ -17,30 +16,11 @@ export class AuthenticationServiceImplement implements AuthenticationService {
     this.authenticationRepository;
   }
 
-  async signin(loginEmailDto: LoginEmailDto): Promise<User | null> {
-    const user = await this.userService.getByOptions({
-      where: { email: loginEmailDto.email },
-    });
-
-    if (!user) return null;
-
-    const result = await comparatePasswordHash(
-      loginEmailDto.password,
-      user.password
-    );
-
-    if (!result) return null;
-
-    return user;
+  async signin(loginEmailDto: LoginEmailDto): Promise<Partial<User> | null> {
+    return await this.userService.checkPasswordExcludeFields(loginEmailDto);
   }
 
-  async signup(user: User): Promise<User | null> {
-    const userDB = await this.userService.getByOptions({
-      where: { email: user.email },
-    });
-
-    if (userDB) return null;
-
-    return await this.userService.create(user);
+  async signup(user: User): Promise<Partial<User> | null> {
+    return await this.userService.createExcludeFields(user);
   }
 }
