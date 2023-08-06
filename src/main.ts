@@ -1,9 +1,16 @@
 import "reflect-metadata";
 
-import { App } from "./app";
+import { applicationConfig } from "./application-config";
+import { App } from "./server";
 
 try {
-  new App().start().catch(handleError);
+  const startApplication = async (): Promise<App> => {
+    const app = applicationConfig();
+    await app.start();
+    return app;
+  };
+
+  startApplication().catch(handleError);
 } catch (e) {
   handleError(e);
 }

@@ -1,10 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 
-import { Logger } from "../../../core";
-import { Id } from "../../common/entities/id-entity";
-import { SchemasConfig } from "../../common/middleware/schema-validation-middleware";
+import { Controller, Logger, SchemasConfig } from "../../../server";
+import { IdDto } from "../../shared";
 import { UserService } from "../interfaces";
-import { Controller } from "../interfaces/controller-interface";
 
 export class UserDeleteController implements Controller {
   readonly logger;
@@ -16,7 +14,7 @@ export class UserDeleteController implements Controller {
   }
 
   schema(): SchemasConfig | null {
-    return { params: Id.Schema() };
+    return { params: IdDto.Schema() };
   }
 
   async run(req: Request, res: Response, next: NextFunction) {

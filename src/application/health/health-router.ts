@@ -1,11 +1,23 @@
-import express from "express";
+import express, { Request, Response } from "express";
 
-import { HealthController } from "./health-controller";
+import { App, BaseRouter, HttpStatusCode, RouterApp } from "../../server";
 
-const healthRouter = express.Router();
+class HealthRouterApp extends BaseRouter implements RouterApp {
+  readonly router;
 
-const healthController = new HealthController();
+  constructor() {
+    super({ path: "/health" });
 
-healthRouter.get("/", healthController.run.bind(healthController));
+    this.router = express.Router();
 
-export { healthRouter };
+    this.router.get("/", (req: Request, res: Response) => {
+      res.status(HttpStatusCode.NoContent).send();
+    });
+  }
+
+  async use(dependencies: App): Promise<void> {
+    dependencies.app.use(this.getFullPath(), this.router);
+  }
+}
+
+export const healthRouterApp = new HealthRouterApp();
