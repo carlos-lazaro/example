@@ -1,5 +1,7 @@
 import { User, UserService } from "../user";
+import { AuthenticationProviders } from "./constants";
 import { LoginEmailDto } from "./dtos";
+import { Authentication } from "./entities";
 import { AuthenticationRepository, AuthenticationService } from "./interfaces";
 
 export class AuthenticationServiceImplement implements AuthenticationService {
@@ -21,6 +23,11 @@ export class AuthenticationServiceImplement implements AuthenticationService {
   }
 
   async signup(user: User): Promise<Partial<User> | null> {
+    const authentication = new Authentication();
+    authentication.provider = AuthenticationProviders.email;
+    authentication.providerId = user.email;
+    user.authentication = [authentication];
+
     return await this.userService.createExcludeFields(user);
   }
 }

@@ -34,7 +34,9 @@ export class User {
   @Column({ type: "int" })
   age: number;
 
-  @OneToMany(() => Authentication, (authentication) => authentication.user)
+  @OneToMany(() => Authentication, (authentication) => authentication.user, {
+    cascade: true,
+  })
   authentication: Authentication[];
 
   constructor(dependencies?: {
