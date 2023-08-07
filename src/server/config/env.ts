@@ -27,6 +27,10 @@ export const env: Env = {
     database: process.env.MYSQL_DATABASE || "",
     password: process.env.MYSQL_PASSWORD || "",
   },
+  jwt: {
+    secret: process.env.JWT_SECRET || "",
+    duration: process.env.JWT_DURATION || "",
+  },
   development: isNodeEnv(Environment.Development),
   production: isNodeEnv(Environment.Production),
   loggerLevel: getLoggerLevel(),

@@ -11,6 +11,10 @@ export interface Env {
     database: string;
     password: string;
   };
+  jwt: {
+    secret: string;
+    duration: string;
+  };
   development: boolean;
   production: boolean;
   loggerLevel: LoggerLevel;
