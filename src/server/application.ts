@@ -1,6 +1,9 @@
 import * as Awilix from "awilix";
 import express, { Express } from "express";
+import fs from "fs";
 import { Server } from "http";
+import { createServer } from "https";
+import path from "path";
 
 import { Middleware } from "./api";
 import { Env } from "./config";
@@ -38,9 +41,6 @@ export class Application implements App {
     this.middlewares = [];
     this.middlewaresError = [];
     this.routers = dependencies.routers || [];
-
-    // TODO: move to a middleware
-    this.container.register({ logger: Awilix.asValue(this.logger) });
   }
 
   public usePlugins(...plugins: Plugin[]): void {
@@ -96,9 +96,44 @@ export class Application implements App {
   }
 
   private async listen(): Promise<void> {
-    this.server = await this.app.listen(this.port);
+    this.server = await this.sslServer().then(async (server) => {
+      if (server) {
+        this.logger.info(
+          `Application Listening in Port ${this.port} and protocol https`
+        );
+        return await server.listen(this.port);
+      } else {
+        this.logger.info(
+          `Application Listening in Port ${this.port} and protocol http`
+        );
+        return await this.app.listen(this.port);
+      }
+    });
+  }
 
-    this.logger.info(`Application Listening in Port ${this.port}`);
+  private async sslServer(): Promise<Server | null> {
+    const { crt, key, isActive } = this.env.server.ssl;
+
+    if (crt.trim().length > 0 && key.trim().length > 0 && isActive) {
+      const keyF = fs.readFileSync(
+        path.join(path.resolve(__dirname), key),
+        "utf-8"
+      );
+      const crtF = fs.readFileSync(
+        path.join(path.resolve(__dirname), crt),
+        "utf-8"
+      );
+
+      return createServer(
+        {
+          key: keyF,
+          cert: crtF,
+        },
+        this.app
+      );
+    }
+
+    return null;
   }
 
   async start(): Promise<void> {

@@ -1,4 +1,5 @@
-import { comparatePasswordHash } from "../../server";
+import { Env, Logger } from "../../server";
+import { generateJsonwebtoken } from "../shared";
 import { User, UserService } from "../user";
 import { LoginEmailDto } from "./dtos";
 import { AuthenticationRepository, AuthenticationService } from "./interfaces";
@@ -6,41 +7,46 @@ import { AuthenticationRepository, AuthenticationService } from "./interfaces";
 export class AuthenticationServiceImplement implements AuthenticationService {
   private readonly authenticationRepository;
   private readonly userService;
+  private readonly logger;
+  private readonly env;
 
   constructor(dependencies: {
     authenticationRepository: AuthenticationRepository;
     userService: UserService;
+    logger: Logger;
+    env: Env;
   }) {
     this.authenticationRepository = dependencies.authenticationRepository;
     this.userService = dependencies.userService;
+    this.logger = dependencies.logger;
+    this.env = dependencies.env;
 
     this.authenticationRepository;
   }
 
-  async signin(loginEmailDto: LoginEmailDto): Promise<User | null> {
-    const user = await this.userService.getByOptions({
-      where: { email: loginEmailDto.email },
-    });
+  async signin(loginEmailDto: LoginEmailDto): Promise<string | null> {
+    this.logger.child({ loginEmailDto }).info("authentication service, signin");
 
-    if (!user) return null;
-
-    const result = await comparatePasswordHash(
-      loginEmailDto.password,
-      user.password
+    const userDb = await this.userService.checkPasswordExcludeFields(
+      loginEmailDto
     );
 
-    if (!result) return null;
-
-    return user;
+    return this.signToken(userDb);
   }
 
-  async signup(user: User): Promise<User | null> {
-    const userDB = await this.userService.getByOptions({
-      where: { email: user.email },
-    });
+  async signup(user: User): Promise<string | null> {
+    this.logger.child({ user }).info("authentication service, signup");
 
-    if (userDB) return null;
+    user.initAuthenticationEmailProvider();
 
-    return await this.userService.create(user);
+    const userDb = await this.userService.createExcludeFields(user);
+
+    return this.signToken(userDb);
+  }
+
+  signToken(user: Partial<User> | null): string | null {
+    if (!user) return null;
+
+    return generateJsonwebtoken(user, this.env);
   }
 }

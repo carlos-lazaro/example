@@ -17,10 +17,10 @@ export class Authentication {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ type: "varchar", nullable: false })
   provider: string;
 
-  @Column()
+  @Column({ type: "varchar", nullable: true })
   @Index()
   providerId: string;
 
@@ -28,7 +28,9 @@ export class Authentication {
   @Index()
   userId: number;
 
-  @ManyToOne(() => User, (user) => user.authentication)
+  @ManyToOne(() => User, (user) => user.authentication, {
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "userId" })
   user: User;
 

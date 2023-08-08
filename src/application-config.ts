@@ -6,7 +6,6 @@ import {
 } from "./application";
 import {
   App,
-  AppDependenciesPlugin,
   Application,
   applicationLoggerFactory,
   BodyParserMiddleware,
@@ -17,6 +16,9 @@ import {
   ErrorMiddleware,
   ExpressRateLimitMiddleware,
   HelmetMiddleware,
+  RegisterAppDependenciesPlugin,
+  RegisterEnvPlugin,
+  RegisterLoggerPlugin,
   TypeormPlugin,
 } from "./server";
 
@@ -36,12 +38,17 @@ export const applicationConfig = (): App => {
     new ExpressRateLimitMiddleware()
   );
 
+  // the order is important if some plugins need dependencies on other plugins
   application.usePlugins(
+    new RegisterEnvPlugin({ env: env }),
+    new RegisterLoggerPlugin(),
     new TypeormPlugin({
       registers: applicationsRepositories,
       entities: applicationsEntities,
     }),
-    new AppDependenciesPlugin({ appDependencies: applicationsDependencies })
+    new RegisterAppDependenciesPlugin({
+      appDependencies: applicationsDependencies,
+    })
   );
 
   application.useMiddlewaresError(new ErrorMiddleware());

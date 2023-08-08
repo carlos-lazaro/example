@@ -36,6 +36,6 @@ export class AuthenticationSignupController implements Controller {
 
     if (!response) throw new ConflictError("Email is invalid", req.ip);
 
-    res.status(HttpStatusCode.Ok).send({ authentication: response });
+    res.status(HttpStatusCode.Ok).send({ token: response });
   }
 }

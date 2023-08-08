@@ -35,6 +35,6 @@ export class AuthenticationSigninController implements Controller {
 
     if (!response) throw new NotFoundError("Email of Password invalid", req.ip);
 
-    res.status(HttpStatusCode.Ok).send({ authentication: response });
+    res.status(HttpStatusCode.Ok).send({ token: response });
   }
 }

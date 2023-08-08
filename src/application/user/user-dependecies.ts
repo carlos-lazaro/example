@@ -8,7 +8,6 @@ import {
   UsersGetController,
   UserUpdateController,
 } from "./controllers";
-import { userRegisterRepository } from "./entities";
 import { UserRepositoryImplement } from "./user-repository-implement";
 import { UserServiceImplement } from "./user-service-implement";
 
@@ -18,13 +17,7 @@ export const userRegisterDependencies: AppDependencies = async (
   dependencies.logger.info("Registration of user dependencies...");
 
   dependencies.container.register({
-    userRepository: Awilix.asClass(UserRepositoryImplement)
-      .inject(() => ({
-        userTypeormRepository: dependencies.container.resolve(
-          userRegisterRepository.repositoryNameContainer
-        ),
-      }))
-      .singleton(),
+    userRepository: Awilix.asClass(UserRepositoryImplement).singleton(),
     userService: Awilix.asClass(UserServiceImplement).singleton(),
     userCreateController: Awilix.asClass(UserCreateController).singleton(),
     userDeleteController: Awilix.asClass(UserDeleteController).singleton(),
