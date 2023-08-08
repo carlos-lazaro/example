@@ -9,7 +9,7 @@ export class UserDto {
   readonly lastName;
   readonly age;
 
-  static fieldsToExlcude: (keyof User)[] = ["password"];
+  static fieldsToExlcude: (keyof User)[] = ["password", "authentication"];
 
   constructor(dependencies: {
     email: string;

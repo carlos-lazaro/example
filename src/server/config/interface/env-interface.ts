@@ -3,6 +3,7 @@ import { LoggerLevel } from "../../module";
 export interface Env {
   server: {
     port: number;
+    ssl: { crt: string; key: string; isActive: boolean };
   };
   mysql: {
     port: number;

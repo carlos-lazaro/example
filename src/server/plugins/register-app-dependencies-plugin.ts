@@ -1,7 +1,7 @@
 import { App } from "../interfaces";
 import { AppDependencies, Plugin } from "./interfaces";
 
-export class AppDependenciesPlugin implements Plugin {
+export class RegisterAppDependenciesPlugin implements Plugin {
   appDependencies;
 
   constructor(dependencies: { appDependencies: AppDependencies[] }) {

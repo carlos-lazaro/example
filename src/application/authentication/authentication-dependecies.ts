@@ -7,7 +7,6 @@ import {
   AuthenticationSigninController,
   AuthenticationSignupController,
 } from "./controllers";
-import { authenticationRegisterRepository } from "./entities";
 
 export const authenticationRegisterDependencies: AppDependencies = async (
   dependencies: App
@@ -15,13 +14,9 @@ export const authenticationRegisterDependencies: AppDependencies = async (
   dependencies.logger.info("Registration of authentication dependencies...");
 
   dependencies.container.register({
-    authenticationRepository: Awilix.asClass(AuthenticationRepositoryImplement)
-      .inject(() => ({
-        authenticationTypeormRepository: dependencies.container.resolve(
-          authenticationRegisterRepository.repositoryNameContainer
-        ),
-      }))
-      .singleton(),
+    authenticationRepository: Awilix.asClass(
+      AuthenticationRepositoryImplement
+    ).singleton(),
     authenticationService: Awilix.asClass(
       AuthenticationServiceImplement
     ).singleton(),
