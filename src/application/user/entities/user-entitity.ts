@@ -10,7 +10,7 @@ import {
 } from "typeorm";
 
 import { TypeormRegisterRepository } from "../../../server";
-import { Authentication } from "../../authentication";
+import { Authentication, AuthenticationProviders } from "../../authentication";
 
 @Entity()
 export class User {
@@ -53,6 +53,14 @@ export class User {
     dependencies?.name && (this.name = dependencies?.name);
     dependencies?.lastName && (this.lastName = dependencies?.lastName);
     dependencies?.age && (this.age = dependencies?.age);
+  }
+
+  initAuthenticationEmailProvider(
+    authentication: Authentication = new Authentication({
+      provider: AuthenticationProviders.email,
+    })
+  ) {
+    this.authentication = [authentication];
   }
 }
 

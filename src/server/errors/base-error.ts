@@ -26,12 +26,11 @@ export class BaseError extends Error implements ResponseError {
   }
 
   getErrorResponse(): [number, { [key: string]: any }] {
-    const response = {
+    const { status, ...response } = {
       ...this,
       message: this.message,
       name: this.name,
-      status: undefined,
     };
-    return [this.status, response];
+    return [status, response];
   }
 }

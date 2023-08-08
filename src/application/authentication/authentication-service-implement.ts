@@ -1,9 +1,7 @@
 import { Env, Logger } from "../../server";
 import { generateJsonwebtoken } from "../shared";
 import { User, UserService } from "../user";
-import { AuthenticationProviders } from "./constants";
 import { LoginEmailDto } from "./dtos";
-import { Authentication } from "./entities";
 import { AuthenticationRepository, AuthenticationService } from "./interfaces";
 
 export class AuthenticationServiceImplement implements AuthenticationService {
@@ -39,10 +37,7 @@ export class AuthenticationServiceImplement implements AuthenticationService {
   async signup(user: User): Promise<string | null> {
     this.logger.child({ user }).info("authentication service, signup");
 
-    const authentication = new Authentication();
-    authentication.provider = AuthenticationProviders.email;
-    authentication.providerId = user.email;
-    user.authentication = [authentication];
+    user.initAuthenticationEmailProvider();
 
     const userDb = await this.userService.createExcludeFields(user);
 
